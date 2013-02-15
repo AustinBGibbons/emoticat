@@ -8,6 +8,7 @@ On : 2/15/2013
 
 Todo :
 
+  - Set up accounts and command line support
   - Training Pipeline
   - Develop Pipeline
   - Test Pipeline
