@@ -23,3 +23,9 @@ Todo :
   - Streaming Support
   - Documentation
   - Test Cases
+
+Rules of the Repo :
+
+  - We're going to practice good git etiquette : No branch should live for longer than one week
+  - Documentation of your style included in any commit (javadocs style preferred)
+  - Good-faith effort and having ad hoc testing
