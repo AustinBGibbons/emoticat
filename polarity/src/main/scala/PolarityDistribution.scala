@@ -24,16 +24,12 @@ import java.io.ObjectOutputStream
 *
 *   Example : todo
 */
-object PolarityDistribution {
+object PolarityDistribution extends Base {
 
   protected final val STOP_LIST = Set("rt", "a", "the", "...")
   protected final val URL_PATTERN =
     Pattern.compile("""\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]""")
   protected final val URL_TOKEN = "<URL>"
-
-  case class Sample(text: String, label: List[String])
-  case class Feature(tokens: List[String], labels: List[String])
-  case class Polarity(polarity: Map[String, Float])
 
   // read in Files of the form "Text,Label1,Label2,..."
   def readCSV(fileName: String) : List[Sample] = {
@@ -118,13 +114,6 @@ object PolarityDistribution {
     val oos = new ObjectOutputStream(fos)
     oos.writeObject(polarities)
     oos.close()
-
-    /*  You can read this back in using
-        val fis = new FileInputStream("map.ser");
-        val ois = new ObjectInputStream(fis);
-        val polarities = ois.readObject().asInstaceOf[Map[String, Polarity]];
-        ois.close();
-    */
   }
 
   def main(args : Array[String]) {
@@ -138,10 +127,4 @@ object PolarityDistribution {
     writeOutput(args(1), polarities)
     //polarities foreach(println)
   }
-  
-  // todo - move to a common file?
-  def goodbye(message : String, errorCode: Int = -1) {
-    System.err.println(message)
-    System.exit(errorCode)
-  } 
 }
