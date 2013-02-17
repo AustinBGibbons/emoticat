@@ -136,6 +136,7 @@ object BuildPolarityDistribution {
     val features = extractFeatures(samples)
     val polarities = polarize(features)
     writeOutput(args(1), polarities)
+    //polarities foreach(println)
   }
   
   // todo - move to a common file?

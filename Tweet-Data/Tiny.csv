@@ -1,3 +1,3 @@
-"HITID","Tweet","Worker1","Answer1","Worker2","Answer2","Agreement","Answer","Date"
-"2BT2YU98JHSTYLHWSP2JHIOBMD1OC4","Mitt Romney","A1Y6CLBM5VJQKD","angry","A3I9UOCM5EXMR2","angry","Yes","angry","Mon Nov 12 18:35:05 UTC 2012"
-"2808IUB2YU98WR64DLUL8FBJCH68KY","Obama Romney","A2FCGEU5RTEWG8","angry","A2J0MGJFLGQOO5","angry","Yes","angry","Mon Nov 12 14:33:31 UTC 2012"
+Tweet,Answer1,Answer2
+Mitt Romney,angry,angry
+Obama Romney,angry,angry
