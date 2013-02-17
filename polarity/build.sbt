@@ -1,5 +1,5 @@
 
-name := "emoticat"
+name := "polarity"
 
 version := "1.0"
 

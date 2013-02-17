@@ -15,7 +15,7 @@ Titles :
 
 Todo :
 
-  - Set up accounts and command line support
+  - Resolve breeze sbt nonsense
   - Training Pipeline
   - Develop Pipeline
   - Test Pipeline
@@ -23,6 +23,7 @@ Todo :
   - Streaming Support
   - Documentation
   - Test Cases
+  - Maven for external jar/lib handling
 
 Rules of the Repo :
 
