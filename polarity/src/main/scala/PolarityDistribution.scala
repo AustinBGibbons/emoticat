@@ -24,7 +24,7 @@ import java.io.ObjectOutputStream
 *
 *   Example : todo
 */
-object BuildPolarityDistribution {
+object PolarityDistribution {
 
   protected final val STOP_LIST = Set("rt", "a", "the", "...")
   protected final val URL_PATTERN =
@@ -129,7 +129,7 @@ object BuildPolarityDistribution {
 
   def main(args : Array[String]) {
     if (args.length != 2) {
-      goodbye("Usage : run-main main.scala.BuildPolarityDistribution inputFile.csv outputFile.ser")
+      goodbye("Usage : run-main main.scala.PolarityDistribution inputFile.csv outputFile.ser")
     }
     
     val samples = readCSV(args(0))
