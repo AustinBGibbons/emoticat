@@ -9,8 +9,11 @@ libraryDependencies  ++= Seq(
             "org.scalanlp" %% "breeze-math" % "0.1",
             "org.scalanlp" %% "breeze-learn" % "0.1",
             "org.scalanlp" %% "breeze-process" % "0.1",
-            "org.scalanlp" %% "breeze-viz" % "0.1"
+            "org.scalanlp" %% "breeze-viz" % "0.1",
+            "org.spark-project" %% "spark-core" % "0.6.2"
 )
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 
 resolvers ++= Seq(
             // other resolvers here

@@ -28,8 +28,9 @@ object TrainSVM extends Base {
   }
 
   def main(args: Array[String]) {
-    if(args.length != 2) {
-      goodbye("Usage: run-main main.scala.TrainSVM polarities.ser support-vectors.sv")
+    if(args.length < 1 || args(0).length != 2) {
+      goodbye("Usage: run-main main.scala.TrainSVM -s polarities.ser support-vectors.sv\n"
+                   + "run-main main.scala.TrainSVM -d labeled-text.csv support-vectors.sv")
     }
 
     val polarities = readSerializedPolarities(args(0))

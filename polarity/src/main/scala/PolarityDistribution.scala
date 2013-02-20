@@ -24,7 +24,7 @@ import java.io.ObjectOutputStream
 *
 *   Example : todo
 */
-object PolarityDistribution extends Base {
+class PolarityDistribution extends Base {
 
   protected final val STOP_LIST = Set("rt", "a", "the", "...")
   protected final val URL_PATTERN =
@@ -109,6 +109,15 @@ object PolarityDistribution extends Base {
     }}
   }
 
+  def generateDistributionFromFile(fileName: String) : Map[String, Polarity] = {
+    val samples = readCSV(fileName)
+    val features = extractFeatures(samples)
+    polarize(features)
+  }
+}
+
+object PolarityDistribution extends Base {
+  
   def writeOutput(fileName: String, polarities: Map[String, Polarity]) {
     val fos = new FileOutputStream(fileName)
     val oos = new ObjectOutputStream(fos)
@@ -121,9 +130,8 @@ object PolarityDistribution extends Base {
       goodbye("Usage : run-main main.scala.PolarityDistribution inputFile.csv outputFile.ser")
     }
     
-    val samples = readCSV(args(0))
-    val features = extractFeatures(samples)
-    val polarities = polarize(features)
+    val pd = new PolarityDistribution()
+    val polarities = pd.generateDistributionFromFile(args(0))
     writeOutput(args(1), polarities)
     //polarities foreach(println)
   }
