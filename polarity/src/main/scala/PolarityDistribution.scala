@@ -48,7 +48,7 @@ class PolarityDistribution extends Base {
   *   @param sample : whitespace separated natural language text
   *   @return : tokenization of the sample
   */
-  def tokenizeSample(sample: String) : List[String] = {
+  def tokenize(sample: String) : List[String] = {
     val tokenized = PTBTokenizer(sample.toLowerCase)
     val stemmed = tokenized.map( word => (new PorterStemmer)(word) ) toList
     val pruned = transforms(stemmed)  // Todo - a more robust ngrams solution
@@ -84,7 +84,7 @@ class PolarityDistribution extends Base {
 
   // Take in many text samples and perform tokenization
   def extractFeatures(samples: List[Sample]) : List[Feature] = {
-    samples map (sample => new Feature(tokenizeSample(sample.text), sample.label)) 
+    samples map (sample => new Feature(tokenize(sample.text), sample.label)) 
   }
 
   // this would be easier if there was a reduceByKey
