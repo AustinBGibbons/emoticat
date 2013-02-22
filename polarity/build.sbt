@@ -1,4 +1,3 @@
-
 name := "polarity"
 
 version := "1.0"
@@ -17,9 +16,14 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 
 resolvers ++= Seq(
             // other resolvers here
+            "spray repo" at "http://repo.spray.io",
+            "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
             // if you want to use snapshot builds (currently 0.2-SNAPSHOT), use this.
             "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
+
+
+//seq(Revolver.settings: _*)
 
 scalaVersion := "2.9.2"
 
