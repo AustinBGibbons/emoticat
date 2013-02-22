@@ -11,8 +11,16 @@ Running :
   contact Ausitn
     > sbt
     > compile
+    > project
     > run
-  
+    
+  As an example
+    > sbt
+    > compile
+    > project polarity
+    > run-main main.scala.PolarityDistribution Tweet-Data/Tiny-Labeled.csv Tweet-Data/Tiny-Polarity.ser
+    > run-main main.scala.CalculatePolarities -s Tweet-Data/Tiny-Polarity.ser Tweet-Data/Tiny-Unlabeled.csv Tweet-Data/Tiny-features.txt
+
 Testing :
   
   We are using scalatest for testing. From the root directory :

@@ -31,15 +31,6 @@ class PolarityDistribution extends Base {
     Pattern.compile("""\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]""")
   protected final val URL_TOKEN = "<URL>"
 
-  // read in Files of the form "Text,Label1,Label2,..."
-  def readCSV(fileName: String) : List[Sample] = {
-    val lines = Source.fromFile(fileName).getLines()
-    lines.toList map(line => {
-      val fields = line.split(",").toList
-      new Sample(fields(0), fields.tail)
-    })
-  }
-
   /**
   *   Takes in unstructured, splittable text
   *   and returns a list of strings :
@@ -110,7 +101,7 @@ class PolarityDistribution extends Base {
   }
 
   def generateDistributionFromFile(fileName: String) : Map[String, Polarity] = {
-    val samples = readCSV(fileName)
+    val samples = readLabeledCSV(fileName)
     val features = extractFeatures(samples)
     polarize(features)
   }

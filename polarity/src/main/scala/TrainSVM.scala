@@ -1,38 +1,37 @@
 package main.scala
 
-import java.io.FileInputStream
-import java.io.ObjectInputStream
+import spark._
+import spark.SparkContext._
+
+import breeze.linalg._
+import breeze.classify._
+
+import breeze.data.Example
+
+/*
+* For each label, we train a 1-v-all classifier
+*/
+class TrainSVM(sc: SparkContext, polarities: Map[String, Polarity], samples: List[Sample]) extends Base {
+
+  def oneVsAll() : List[Array[Example[Int, Vector[Float]]]] = {
+  
+    List()
+  }
+}
 
 object TrainSVM extends Base {
-
-  /** 
-  * Read in the serialized polarities map.
-  * overriding resolveClass due to an error in how scala/sbt search for classes
-  *
-  * @param fileName : input File (map.ser)
-  * @return : deserialized map
-  */
-  def readSerializedPolarities(fileName : String) : Map[String, Polarity] = {
-    val ois = new ObjectInputStream(new FileInputStream(fileName)) {
-      override def resolveClass(desc: java.io.ObjectStreamClass): Class[_] = {
-        try { Class.forName(desc.getName, false, getClass.getClassLoader) }
-        catch { case ex: ClassNotFoundException => super.resolveClass(desc) }
-      }
-    }
-    val polarities = ois.readObject() match {
-      case m : Map[String, Polarity] => m
-      case _ => throw new ClassCastException
-    }
-    ois.close();
-    polarities
-  }
-
   def main(args: Array[String]) {
     if(args.length < 1 || args(0).length != 2) {
-      goodbye("Usage: run-main main.scala.TrainSVM -s polarities.ser support-vectors.sv\n"
-                   + "run-main main.scala.TrainSVM -d labeled-text.csv support-vectors.sv")
+      goodbye("Usage: run-main main.scala.TrainSVM -c labeled-data.csv support-vectors.sv\n")
+                  // + "run-main main.scala.TrainSVM -d labeled-text.csv support-vectors.sv")
     }
 
-    val polarities = readSerializedPolarities(args(0))
+    val sc = new SparkContext("local", "caluclating polarities on new data")
+
+    val samples = sc.parallelize(readLabeledCSV(args(1))) map (x => x.text)
+    val pd = new PolarityDistribution()
+    val polarities = pd.generateDistributionFromFile(args(1))
+    //val cp = new CalculatePolarities(sc, polarities, samples)
+   // val featureArray = cp.compute().collect()
   }
 }
