@@ -12,11 +12,7 @@ import breeze.data.Example
 * For each label, we train a 1-v-all classifier
 */
 class TrainSVM(sc: SparkContext, polarities: Map[String, Polarity], samples: List[Sample]) extends Base {
-
-  def oneVsAll() : List[Array[Example[Int, Vector[Float]]]] = {
-  
-    List()
-  }
+// todo : move object into here
 }
 
 object TrainSVM extends Base {
@@ -28,10 +24,12 @@ object TrainSVM extends Base {
 
     val sc = new SparkContext("local", "caluclating polarities on new data")
 
-    val samples = sc.parallelize(readLabeledCSV(args(1))) map (x => x.text)
+    val samples = sc.parallelize(readLabeledCSV(args(1))) 
+    val labels = samples flatMap (x => x.label) distinct() collect() toList
     val pd = new PolarityDistribution()
-    val polarities = pd.generateDistributionFromFile(args(1))
-    //val cp = new CalculatePolarities(sc, polarities, samples)
-   // val featureArray = cp.compute().collect()
+    val polarities = pd.generateDistributionFromFile(args(2))
+    val cp = new CalculatePolarities(sc, polarities)
+    val featureMatrices = cp.compute(labels, samples).collect().toList
+    featureMatrices foreach (x => x._2 foreach (println))
   }
 }

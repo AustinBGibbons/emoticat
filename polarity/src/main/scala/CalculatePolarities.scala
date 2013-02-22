@@ -12,24 +12,38 @@ import breeze.linalg.Counter
 *   Calculate the distribution over the labels
 */
 class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) extends Base {
+  val pd = new PolarityDistribution()
+
   // executes the calculation
   def compute(samples: RDD[String]) : RDD[Array[Float]] = {
-    val pd = new PolarityDistribution()
     samples map (sample => {
-      val labelCounts = Counter[String, Float]()
-      pd.tokenize(sample) foreach (token => {
-      println(token)
-        if (polarities.contains(token)) {
-          polarities.get(token).get foreach{case(label, value) => labelCounts(label) += value}
-        }  
-      })
-      normalize(labelCounts.valuesIterator.toArray) // TODO : map to specific sized and indexed array
+      compute(sample)
     })
   }
 
+  def compute(sample: String) : Array[Float] = {
+    val labelCounts = Counter[String, Float]()
+    pd.tokenize(sample) foreach (token => {
+    println(token)
+      if (polarities.contains(token)) {
+        polarities.get(token).get foreach{case(label, value) => labelCounts(label) += value}
+      }  
+    })
+    normalize(labelCounts.valuesIterator.toArray) // TODO : map to specific sized and indexed array
+  }
+
   // create each 1-v-all feature set
-  def compute(labels: List[String], samples: RDD[Sample]) : List[RDD[PolarExample]] = {
-    List()
+  def compute(labels: List[String], samples: RDD[Sample]) : RDD[(String, Seq[PolarExample])] = {
+    val indexMap = {for (i <- 0 until labels.length) 
+      yield { (labels(i), i)}
+    }.toMap
+
+    samples flatMap ( sample => {
+      val featureArray = compute(sample.text)
+      labels map ( label => {
+        (label, (new PolarExample(if(sample.label.contains(label)) 1 else 0, featureArray)))
+      })
+    }) groupByKey()
   }
 
   // normalize an array of floats
