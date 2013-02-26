@@ -15,7 +15,8 @@ class TrainSVM(sc: SparkContext) extends Base {
 
   // Support generic sequences
   def train(samples : Seq[PolarExample]) : Classifier[Int, Array[Float]] = {
-    SVM(samples)
+    //SVM(samples)
+    null
   }
 
   // If scaling becomes an issues then we'll have to roll our own implementation.
