@@ -20,7 +20,14 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
       compute(sample)
     })
   }
-
+  
+  /**
+  *   Take a natural language string and return
+  *   the normalized sum of the polarity distributions of each token (word)
+  *
+  *   @param : sample : Natural language sample (ie, Tweet)
+  *   @return : normalized vector of float
+  */
   def compute(sample: String) : Array[Float] = {
     val labelCounts = Counter[String, Float]()
     pd.tokenize(sample) foreach (token => {
@@ -34,10 +41,6 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
 
   // create each 1-v-all feature set
   def compute(labels: List[String], samples: RDD[Sample]) : RDD[(String, Seq[PolarExample])] = {
-    val indexMap = {for (i <- 0 until labels.length) 
-      yield { (labels(i), i)}
-    }.toMap
-
     samples flatMap ( sample => {
       val featureArray = compute(sample.text)
       labels map ( label => {

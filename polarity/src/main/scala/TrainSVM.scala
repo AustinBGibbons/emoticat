@@ -11,8 +11,18 @@ import breeze.data.Example
 /*
 * For each label, we train a 1-v-all classifier
 */
-class TrainSVM(sc: SparkContext, polarities: Map[String, Polarity], samples: List[Sample]) extends Base {
-// todo : move object into here
+class TrainSVM(sc: SparkContext) extends Base {
+
+  // Support generic sequences
+  def train(samples : Seq[PolarExample]) : Classifier[Int, Array[Float]] = {
+    SVM(samples)
+  }
+
+  // If scaling becomes an issues then we'll have to roll our own implementation.
+  // Breeze is not parallel
+  def train(samples : RDD[PolarExample]) : Classifier[Int, Array[Float]] = {
+    train(samples.collect())
+  }
 }
 
 object TrainSVM extends Base {
@@ -30,6 +40,6 @@ object TrainSVM extends Base {
     val polarities = pd.generateDistributionFromFile(args(2))
     val cp = new CalculatePolarities(sc, polarities)
     val featureMatrices = cp.compute(labels, samples).collect().toList
-    featureMatrices foreach (x => x._2 foreach (println))
+    featureMatrices foreach (x => {println(x._1) ; x._2 foreach (println)})
   }
 }
