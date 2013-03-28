@@ -13,4 +13,8 @@ object Root extends Build {
     id = "polarity",
     base = file("polarity")
   )
+
+  lazy val rest = play Project(
+    "emoticat-rest", "1.0", Nil
+  )
 }

@@ -31,7 +31,6 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
   def compute(sample: String) : Array[Float] = {
     val labelCounts = Counter[String, Float]()
     pd.tokenize(sample) foreach (token => {
-    println(token)
       if (polarities.contains(token)) {
         polarities.get(token).get foreach{case(label, value) => labelCounts(label) += value}
       }  
@@ -113,7 +112,7 @@ object CalculatePolarities extends Base {
         val pd = new PolarityDistribution()
          pd.generateDistributionFromFile(args(1))
       }
-    val samples = sc.parallelize(Source.fromFile(args(2)).getLines().toList)
+    val samples = sc.parallelize(Source.fromFile(args(2)).getLines().map(x => x.split(",").head).toList)
     val cp = new CalculatePolarities(sc, polarities)
     writeOutput(args(3), cp.compute(samples).collect())
   }

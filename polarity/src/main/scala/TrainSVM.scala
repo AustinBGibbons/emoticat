@@ -41,6 +41,22 @@ object TrainSVM extends Base {
     val polarities = pd.generateDistributionFromFile(args(2))
     val cp = new CalculatePolarities(sc, polarities)
     val featureMatrices = cp.compute(labels, samples).collect().toList
-    featureMatrices foreach (x => {println(x._1) ; x._2 foreach (println)})
+    //featureMatrices foreach {x => println(x._1) ; x._2 foreach (println)}
+    featureMatrices foreach (x => printMatrix(x, args(3)))
+
+  }
+
+  def printMatrix(x : (String, Seq[PolarExample]), dir: String) { 
+    val fileName = dir+"/"+x._1+".mat"
+    val file = new java.io.File(fileName);
+    val parent_directory = file.getParentFile();
+
+    if (null != parent_directory) {
+      parent_directory.mkdirs();
+    }
+
+    val pw = new java.io.PrintWriter(new java.io.FileWriter(file))
+    x._2 foreach (y => pw.write(y.toString + "\n"))
+    pw.close()
   }
 }
