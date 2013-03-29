@@ -14,6 +14,8 @@ libraryDependencies  ++= Seq(
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 
+libraryDependencies += "net.liftweb" %% "lift-json" % "2.5-RC2"
+
 resolvers ++= Seq(
             // other resolvers here
             "spray repo" at "http://repo.spray.io",

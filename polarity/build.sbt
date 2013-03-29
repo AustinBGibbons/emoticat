@@ -12,6 +12,8 @@ libraryDependencies  ++= Seq(
             "org.spark-project" %% "spark-core" % "0.6.2"
 )
 
+libraryDependencies += "net.liftweb" %% "lift-json" % "2.5-RC2"
+
 libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 
 resolvers ++= Seq(
