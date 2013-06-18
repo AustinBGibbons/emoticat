@@ -9,12 +9,14 @@ On : 2/15/2013
 Running :
   We are using sbt. If you have trouble with the dependencies or any general questions,
   contact Ausitn
+
      > sbt
      > compile
      > project
      > run
     
   As an example
+
      > sbt
      > compile
      > project polarity
@@ -24,6 +26,7 @@ Running :
 Testing :
   
   We are using scalatest for testing. From the root directory :
+
      > sbt test
   Should run and compile all test. You can also test within a specific project, 
   or use test-only to call a specific test.
