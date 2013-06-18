@@ -3,9 +3,6 @@ emoticat
 
 Emotion Categorization
 
-By : Austin Gibbons
-On : 2/15/2013
-
 Running :
   We are using sbt. If you have trouble with the dependencies or any general questions,
   contact Ausitn
