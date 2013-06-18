@@ -2,28 +2,28 @@ package main.scala
 
 import spark._
 import spark.SparkContext._
-
+/*
 import breeze.linalg._
 import breeze.classify._
 
 import breeze.data.Example
-
+*/
 /*
 * For each label, we train a 1-v-all classifier
 */
 class TrainSVM(sc: SparkContext) extends Base {
 
+/*
   // Support generic sequences
   def train(samples : Seq[PolarExample]) : Classifier[Int, Array[Float]] = {
     //SVM(samples)
     null
   }
 
-  // If scaling becomes an issues then we'll have to roll our own implementation.
-  // Breeze is not parallel
   def train(samples : RDD[PolarExample]) : Classifier[Int, Array[Float]] = {
     train(samples.collect())
   }
+*/
 }
 
 object TrainSVM extends Base {
@@ -40,12 +40,12 @@ object TrainSVM extends Base {
     val pd = new PolarityDistribution()
     val polarities = pd.generateDistributionFromFile(args(2))
     val cp = new CalculatePolarities(sc, polarities)
-    val featureMatrices = cp.compute(labels, samples).collect().toList
+    //val featureMatrices = cp.compute(labels, samples).collect().toList
     //featureMatrices foreach {x => println(x._1) ; x._2 foreach (println)}
-    featureMatrices foreach (x => printMatrix(x, args(3)))
+    //featureMatrices foreach (x => printMatrix(x, args(3)))
 
   }
-
+/*
   def printMatrix(x : (String, Seq[PolarExample]), dir: String) { 
     val fileName = dir+"/"+x._1+".mat"
     val file = new java.io.File(fileName);
@@ -59,4 +59,5 @@ object TrainSVM extends Base {
     x._2 foreach (y => pw.write(y.toString + "\n"))
     pw.close()
   }
+*/
 }

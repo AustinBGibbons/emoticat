@@ -39,6 +39,7 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
   }
 
   // create each 1-v-all feature set
+/*
   def compute(labels: List[String], samples: RDD[Sample]) : RDD[(String, Seq[PolarExample])] = {
     samples flatMap ( sample => {
       val featureArray = compute(sample.text)
@@ -47,6 +48,7 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
       })
     }) groupByKey()
   }
+*/
 
   // normalize an array of floats
   def normalize(arr: Array[Float]) : Array[Float] = {

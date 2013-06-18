@@ -1,9 +1,11 @@
 package main.scala
 
+/*
 case class PolarExample(label: Int, features: Array[Float]) extends breeze.data.Example[Int, Array[Float]] {
   val id: String = label.toString + features map (x => x.toString) reduce(_+_)
   override def toString : String = label.toString + {features map (x => " " + x.toString) reduce(_+_)}
 }
+*/
 
 case class Sample(text: String, label: List[String])
 case class Feature(tokens: List[String], labels: List[String])
