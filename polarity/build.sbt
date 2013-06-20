@@ -9,12 +9,16 @@ libraryDependencies  ++= Seq(
             "org.scalanlp" %% "breeze-learn" % "0.1",
             "org.scalanlp" %% "breeze-process" % "0.1",
             "org.scalanlp" %% "breeze-viz" % "0.1",
-            "org.spark-project" %% "spark-core" % "0.6.2"
+            "org.spark-project" %% "spark-core" % "0.7.0"
 )
 
-libraryDependencies += "net.liftweb" %% "lift-json" % "2.5-RC2"
-
 libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+
+//libraryDependencies += "net.liftweb" %% "lift-json" % "2.5-RC2"
+
+libraryDependencies += "com.github.scopt" %% "scopt" % "3.0.0"
+
+resolvers += "sonatype-public" at "https://oss.sonatype.org/content/groups/public"
 
 resolvers ++= Seq(
             // other resolvers here
@@ -23,9 +27,6 @@ resolvers ++= Seq(
             // if you want to use snapshot builds (currently 0.2-SNAPSHOT), use this.
             "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 )
-
-
-//seq(Revolver.settings: _*)
 
 scalaVersion := "2.9.2"
 
