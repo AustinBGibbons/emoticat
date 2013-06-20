@@ -20,6 +20,7 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
     val all_samples = samples map (sample => {
       compute(sample)
     }) 
+ //   all_samples foreach (x => if (x.size != polarity_count) println("I had : " + x.size + " instead of " + polarity_count))
     val filtered_samples = all_samples filter(x => x.size == polarity_count)
     println("\n\nfiltered: " + (all_samples.count() - filtered_samples.count()) + " / " + all_samples.count())
     filtered_samples
@@ -94,36 +95,59 @@ object CalculatePolarities extends Base {
   * @param filename : outputFile
   * @param featureMatrix : row are samples, columns are labels
   */
-  def writeOutput(fileName: String, featureMatrix : Iterable[Array[Float]]) {
-    val pw = new PrintWriter(new FileWriter(fileName))
-    featureMatrix foreach {row =>
-      row foreach {col =>
-        pw.print(col.toString + " ")
+  def writeUnlabeledOutput(fileName: String, featureMatrix : RDD[Array[Float]]) {
+    featureMatrix.map(_.mkString(" ")).saveAsTextFile(fileName)
+  }
+
+  /**
+  *   Write out the featureMatrix as space separated text, preceded by label being present
+  *
+  * @param directory      : output directory to contain /label.mat
+  * @param featureMatrix  : row are samples, columns are labels
+  * @param sample_lables  : labels corresponding to each row
+  * @param labels         : total set of all labels
+  */
+  def writeLabeledOutput(directory: String, featureMatrix: RDD[Array[Float]], sample_labels: RDD[Array[String]], labels: Seq[String]) = {
+    labels foreach (label => {
+      val f : ((Array[String], Array[Float])) => String = {
+        case (sample_label, row) => {
+          val sample_bit = if (sample_label.contains(label)) 1 else 0
+          sample_bit.toString + " " + row.mkString(" ")
+        }
       }
-      pw.println()
-    }
-    pw.close()
+      sample_labels.zip(featureMatrix).map(f).saveAsTextFile(directory + "/" + label + ".mat")
+    })
+    writeUnlabeledOutput(directory + "/unlabeled.mat", featureMatrix)
   }
 
   def main(args: Array[String]) {
     if(args.length < 4 || args(0).length != 2) {
       goodbye("Usage: \n\t run-main main.scala.CalculatePolarities -s polarities.ser examples.txt output.mat [-sep <sep>]\n"
-      + "\t run-main main.scala.CalculatePolarities -d labeled-text.csv examples.txt output.mat [-sep <sep>]")
+      + "\t run-main main.scala.CalculatePolarities -d labeled-text.csv examples.txt output.mat [-sep {',','t'}]")
     }
   
     val sc = new SparkContext("local", "caluclating polarities on new data")
     val pd = new PolarityDistribution()
+    val sep = if(args.length < 6 || args(5) == "t") "\t" else args(5)
     val polarities : Map[String, Polarity] = 
-      if (args(0) == "-s") {
-        readSerializedPolarities(args(1))
-      }
-      else {
-         pd.generateDistributionFromFile(args(1))
-      }
-    val sep = if (args.length >= 5) args(4) else "\t" // todo - check csv, tsv by default
-    val samples = sc.parallelize(Source.fromFile(args(2)).getLines().map(x => x.split(sep).head).toList)
+      if (args(0) == "-s") readSerializedPolarities(args(1))
+      else pd.generateDistributionFromFile(args(1), sep)
+    val labels = pd.getLabels(polarities)
+
+    val rows = sc.textFile(args(2)).map(_.split(sep)) 
+    val samples = rows.map(_.head)
+    val canary = rows.take(1).apply(0)
+    println("This is what your row looks like : " + canary.mkString(sep))
+
     val cp = new CalculatePolarities(sc, polarities)
-    println(pd.getLabels(polarities).mkString("\t"))
-    writeOutput(args(3), cp.compute(samples).collect())
+    val polarity_distributions = cp.compute(samples)
+ 
+    if(canary.size > 1) {
+      val sample_labels = rows.map(_.drop(1))
+      writeLabeledOutput(args(3), polarity_distributions, sample_labels, labels)
+    } else {
+      writeUnlabeledOutput(args(3), polarity_distributions)
+    }
+    println(labels.mkString("\t"))
   }
 }

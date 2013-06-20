@@ -102,12 +102,12 @@ class PolarityDistribution extends Base {
 
   // this is ugly
   def getLabelCount(polarities: Map[String, Polarity]) : Int = 
-    polarities.take(100).toArray.map(x=> x._2.polarity.size).reduce(scala.math.max)
+    polarities.toArray.map(x=> x._2.polarity.size).reduce(scala.math.max)
 
   // so is this
   def getLabels(polarities: Map[String, Polarity]) : Array[String] = {
     val size = getLabelCount(polarities)
-    polarities.take(100).toArray.filter(x=> x._2.polarity.size == size).toArray.apply(0)._2.polarity.keys.toArray
+    polarities.toArray.filter(x=> x._2.polarity.size == size).toArray.apply(0)._2.polarity.keys.toArray
   }
 
   def generateDistributionFromFile(fileName: String, sep: String = "\t") : Map[String, Polarity] = {
