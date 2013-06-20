@@ -17,3 +17,8 @@ project/plugins/project/
 # IDEA files
 .idea/
 .idea_modules/
+
+# Data
+Summer-Data/
+*.mat
+*feature*

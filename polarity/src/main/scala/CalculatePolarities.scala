@@ -16,9 +16,13 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
 
   // executes the calculation
   def compute(samples: RDD[String]) : RDD[Array[Float]] = {
-    samples map (sample => {
+    val polarity_count = pd.getLabelCount(polarities)
+    val all_samples = samples map (sample => {
       compute(sample)
-    })
+    }) 
+    val filtered_samples = all_samples filter(x => x.size == polarity_count)
+    println("\n\nfiltered: " + (all_samples.count() - filtered_samples.count()) + " / " + all_samples.count())
+    filtered_samples
   }
   
   /**
@@ -30,12 +34,14 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
   */
   def compute(sample: String) : Array[Float] = {
     val labelCounts = Counter[String, Float]()
+    //println("Trying: " + sample)
     pd.tokenize(sample) foreach (token => {
       if (polarities.contains(token)) {
         polarities.get(token).get foreach{case(label, value) => labelCounts(label) += value}
       }  
     })
-    normalize(labelCounts.valuesIterator.toArray) // TODO : map to specific sized and indexed array
+    if (labelCounts.size == 0) Array()
+    else normalize(labelCounts.valuesIterator.toArray) // TODO : map to specific sized and indexed array
   }
 
   // create each 1-v-all feature set
@@ -100,22 +106,24 @@ object CalculatePolarities extends Base {
   }
 
   def main(args: Array[String]) {
-    if(args.length != 4 || args(0).length != 2) {
-      goodbye("Usage: \n\t run-main main.scala.CalculatePolarities -s polarities.ser examples.txt output.mat\n"
-      + "\t run-main main.scala.CalculatePolarities -d labeled-text.csv examples.txt output.mat")
+    if(args.length < 4 || args(0).length != 2) {
+      goodbye("Usage: \n\t run-main main.scala.CalculatePolarities -s polarities.ser examples.txt output.mat [-sep <sep>]\n"
+      + "\t run-main main.scala.CalculatePolarities -d labeled-text.csv examples.txt output.mat [-sep <sep>]")
     }
   
     val sc = new SparkContext("local", "caluclating polarities on new data")
+    val pd = new PolarityDistribution()
     val polarities : Map[String, Polarity] = 
       if (args(0) == "-s") {
         readSerializedPolarities(args(1))
       }
       else {
-        val pd = new PolarityDistribution()
          pd.generateDistributionFromFile(args(1))
       }
-    val samples = sc.parallelize(Source.fromFile(args(2)).getLines().map(x => x.split(",").head).toList)
+    val sep = if (args.length >= 5) args(4) else "\t" // todo - check csv, tsv by default
+    val samples = sc.parallelize(Source.fromFile(args(2)).getLines().map(x => x.split(sep).head).toList)
     val cp = new CalculatePolarities(sc, polarities)
+    println(pd.getLabels(polarities).mkString("\t"))
     writeOutput(args(3), cp.compute(samples).collect())
   }
 }

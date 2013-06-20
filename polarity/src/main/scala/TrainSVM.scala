@@ -35,7 +35,7 @@ object TrainSVM extends Base {
 
     val sc = new SparkContext("local", "caluclating polarities on new data")
 
-    val samples = sc.parallelize(readLabeledCSV(args(1))) 
+    val samples = sc.parallelize(readLabeledFile(args(1))) 
     val labels = samples flatMap (x => x.label) distinct() collect() toList
     val pd = new PolarityDistribution()
     val polarities = pd.generateDistributionFromFile(args(2))

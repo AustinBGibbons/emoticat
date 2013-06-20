@@ -22,11 +22,11 @@ trait Base extends Serializable {
   } 
 
   // read in Files of the form "Text,Label1,Label2,..."
-  def readLabeledCSV(fileName: String) : List[Sample] = {
+  def readLabeledFile(fileName: String, sep: String = "\t") : List[Sample] = {
     import io.Source
     val lines = Source.fromFile(fileName).getLines()
     lines.toList map(line => {
-      val fields = line.split(",").toList
+      val fields = line.split(sep).toList
       new Sample(fields(0), fields.tail)
     })
   }

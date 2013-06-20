@@ -100,8 +100,18 @@ class PolarityDistribution extends Base {
     }}
   }
 
-  def generateDistributionFromFile(fileName: String) : Map[String, Polarity] = {
-    val samples = readLabeledCSV(fileName)
+  // this is ugly
+  def getLabelCount(polarities: Map[String, Polarity]) : Int = 
+    polarities.take(100).toArray.map(x=> x._2.polarity.size).reduce(scala.math.max)
+
+  // so is this
+  def getLabels(polarities: Map[String, Polarity]) : Array[String] = {
+    val size = getLabelCount(polarities)
+    polarities.take(100).toArray.filter(x=> x._2.polarity.size == size).toArray.apply(0)._2.polarity.keys.toArray
+  }
+
+  def generateDistributionFromFile(fileName: String, sep: String = "\t") : Map[String, Polarity] = {
+    val samples = readLabeledFile(fileName, sep)
     val features = extractFeatures(samples)
     polarize(features)
   }
@@ -117,12 +127,13 @@ object PolarityDistribution extends Base {
   }
 
   def main(args : Array[String]) {
-    if (args.length != 2) {
-      goodbye("Usage : run-main main.scala.PolarityDistribution inputFile.csv outputFile.ser")
+    if (args.length < 2) {
+      goodbye("Usage : run-main main.scala.PolarityDistribution inputFile.csv outputFile.ser sep")
     }
     
     val pd = new PolarityDistribution()
-    val polarities = pd.generateDistributionFromFile(args(0))
+    val sep = if (args.length == 3) args(2) else "\t"
+    val polarities = pd.generateDistributionFromFile(args(0), sep)
     writeOutput(args(1), polarities)
     //polarities foreach(println)
   }
