@@ -5,7 +5,7 @@ import spark.SparkContext._
 
 import io.Source
 
-import breeze.linalg.Counter
+//import breeze.linalg.Counter
 
 /**
 *   Give natural language text and a mapping from string tokens to floats (polarities)  
@@ -22,7 +22,7 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
     }) 
  //   all_samples foreach (x => if (x.size != polarity_count) println("I had : " + x.size + " instead of " + polarity_count))
     val filtered_samples = all_samples filter(x => x.size == polarity_count)
-    println("\n\nfiltered: " + (all_samples.count() - filtered_samples.count()) + " / " + all_samples.count())
+    println("\nfiltered: " + (all_samples.count() - filtered_samples.count()) + " / " + all_samples.count() + "\n")
     filtered_samples
   }
   
@@ -34,15 +34,17 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
   *   @return : normalized vector of float
   */
   def compute(sample: String) : Array[Float] = {
-    val labelCounts = Counter[String, Float]()
-    //println("Trying: " + sample)
+    val labelCounts = scala.collection.mutable.HashMap[String, Float]() 
     pd.tokenize(sample) foreach (token => {
       if (polarities.contains(token)) {
-        polarities.get(token).get foreach{case(label, value) => labelCounts(label) += value}
+        polarities.get(token).get foreach{case(label, value) => 
+          //println("adding: " + value + " from " + token + " to " + label)
+          labelCounts.put(label, labelCounts.getOrElse(label, 0f)+value)
+        }
       }  
     })
     if (labelCounts.size == 0) Array()
-    else normalize(labelCounts.valuesIterator.toArray) // TODO : map to specific sized and indexed array
+    else normalize(labelCounts.toSeq.sortBy(_._1).map(_._2).toArray) // TODO : map to specific sized and indexed array
   }
 
   // create each 1-v-all feature set
@@ -135,13 +137,13 @@ object CalculatePolarities extends Base {
       else pd.generateDistributionFromFile(args(1), sep)
     val labels = pd.getLabels(polarities)
 
-    val rows = sc.textFile(args(2)).map(_.split(sep)) 
+    val rows = sc.textFile(args(2)).map(_.split(sep)).persist()
     val samples = rows.map(_.head)
     val canary = rows.take(1).apply(0)
     println("This is what your row looks like : " + canary.mkString(sep))
 
     val cp = new CalculatePolarities(sc, polarities)
-    val polarity_distributions = cp.compute(samples)
+    val polarity_distributions = cp.compute(samples).persist()
  
     if(canary.size > 1) {
       val sample_labels = rows.map(_.drop(1))
@@ -149,6 +151,6 @@ object CalculatePolarities extends Base {
     } else {
       writeUnlabeledOutput(args(3), polarity_distributions)
     }
-    println(labels.mkString("\t"))
+    println(labels.sorted.mkString("\t"))
   }
 }
