@@ -86,6 +86,7 @@ object CalculatePolarities extends Base {
       case _ => throw new ClassCastException
     }
     ois.close();
+    polarities foreach (println)
     polarities
   }
 
