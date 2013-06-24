@@ -1,12 +1,12 @@
-function svm_trainer(arg1, arg2)
-load arg1;
+%function svm_trainer(arg1, arg2)
+%load arg1;
 
 pidx = randperm(size(train,1));
 r_train = train(pidx,:);
 labels = r_train(:,1);
 features = r_train(:,2:end);
 
-load arg2;
+%load arg2;
 
 learnSize = size(learn, 1);
 
@@ -21,4 +21,4 @@ end
 disp(sum(guess));
 disp(learnSize);
 disp(sum(guess) / learnSize);
-exit
+%exit
