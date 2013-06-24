@@ -21,7 +21,7 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
       compute(sample)
     }) 
  //   all_samples foreach (x => if (x.size != polarity_count) println("I had : " + x.size + " instead of " + polarity_count))
-    val filtered_samples = all_samples filter(x => x.size == polarity_count)
+    val filtered_samples = all_samples filter(x => x.size == polarity_count && !x.map(_.isNaN).contains(true))
     println("\nfiltered: " + (all_samples.count() - filtered_samples.count()) + " / " + all_samples.count() + "\n")
     filtered_samples
   }
