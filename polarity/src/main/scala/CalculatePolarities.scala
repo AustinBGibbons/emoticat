@@ -88,7 +88,6 @@ object CalculatePolarities extends Base {
       case _ => throw new ClassCastException
     }
     ois.close();
-    polarities foreach (println)
     polarities
   }
 
@@ -140,7 +139,6 @@ object CalculatePolarities extends Base {
     val rows = sc.textFile(args(2)).map(_.split(sep)).persist()
     val samples = rows.map(_.head)
     val canary = rows.take(1).apply(0)
-    println("This is what your row looks like : " + canary.mkString(sep))
 
     val cp = new CalculatePolarities(sc, polarities)
     val polarity_distributions = cp.compute(samples).persist()
@@ -151,6 +149,8 @@ object CalculatePolarities extends Base {
     } else {
       writeUnlabeledOutput(args(3), polarity_distributions)
     }
-    println(labels.sorted.mkString("\t"))
+    println("\nThis is what your row looks like : \n" + canary.mkString(sep))
+    println("\nThis is what a tweet looks like : \n" + canary.head)
+    if (canary.size > 1) println("\nColumns: " + labels.sorted.mkString(sep) +"\n")
   }
 }
