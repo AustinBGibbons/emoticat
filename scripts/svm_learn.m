@@ -1,13 +1,22 @@
 function svm_learn(arg1, arg2, arg3)
-[features labels] = load_mat(arg1);
-hold_out = floor(size(features,1) / 5);
-X = features(hold_out:end,:);
-D = labels(hold_out:end,:);
-Xtest = features(1:hold_out,:);
-Dtest = labels(1:hold_out,:);
-%disp(X(1,:));
-%disp(D(1,:));
-svms = svmtrain(X,D);
+flag = 0;
+while flag == 0
+  [features labels] = load_mat(arg1);
+  hold_out = floor(size(features,1) / 5);
+  X = features(hold_out:end,:);
+  D = labels(hold_out:end,:);
+  Xtest = features(1:hold_out,:);
+  Dtest = labels(1:hold_out,:);
+  %disp(X(1,:));
+  %disp(D(1,:));
+  try
+    svms = svmtrain(X,D);
+    flag = 1
+  catch err
+    disp('errord');
+    disp(err);
+  end
+end
 guess = zeros(hold_out,1);
 for i=1:hold_out
   guess(i) = svmclassify(svms, Xtest(i,:));

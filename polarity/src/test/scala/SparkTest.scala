@@ -14,4 +14,5 @@ class SparkTest extends FlatSpec {
     assert(sarx(1) == 2)
     assert(sarx(2) == 3)
   }
+
 }

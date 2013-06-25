@@ -1,4 +1,4 @@
-name := "polarity"
+name := "root"
 
 version := "1.0"
 

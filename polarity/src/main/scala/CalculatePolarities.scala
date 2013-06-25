@@ -4,6 +4,7 @@ import spark._
 import spark.SparkContext._
 
 import io.Source
+import java.io._
 
 //import breeze.linalg.Counter
 
@@ -12,6 +13,9 @@ import io.Source
 *   Calculate the distribution over the labels
 */
 class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) extends Base {
+  def this(sc: SparkContext) = this(sc, CalculatePolarities.readSerializedPolarities(
+    "/afs/cs.stanford.edu/u/gibbons4/emoticat/emoticat/Data/Tweet-New-Data/06-24/Obamney-Polarity.ser"))
+
   val pd = new PolarityDistribution()
 
   // executes the calculation
@@ -64,32 +68,6 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
     val sum = arr.reduce(_+_)
     arr map (x => x/sum)
   }
-}
-
-object CalculatePolarities extends Base {
-  import java.io._
-
-  /** 
-  * Read in the serialized polarities map.
-  * overriding resolveClass due to an error in how scala/sbt search for classes
-  *
-  * @param fileName : input File (map.ser)
-  * @return : deserialized map
-  */
-  def readSerializedPolarities(fileName : String) : Map[String, Polarity] = {
-    val ois = new ObjectInputStream(new FileInputStream(fileName)) {
-      override def resolveClass(desc: java.io.ObjectStreamClass): Class[_] = {
-        try { Class.forName(desc.getName, false, getClass.getClassLoader) }
-        catch { case ex: ClassNotFoundException => super.resolveClass(desc) }
-      }
-    }
-    val polarities = ois.readObject() match {
-      case m : Map[String, Polarity] => m
-      case _ => throw new ClassCastException
-    }
-    ois.close();
-    polarities
-  }
 
   /**
   *   Write out the featureMatrix as space separated text
@@ -121,6 +99,32 @@ object CalculatePolarities extends Base {
     })
     writeUnlabeledOutput(directory + "/unlabeled.mat", featureMatrix)
   }
+}
+
+object CalculatePolarities extends Base {
+  /** 
+  * Read in the serialized polarities map.
+  * overriding resolveClass due to an error in how scala/sbt search for classes
+  *
+  * Todo : move into PolarityDistribution
+  *
+  * @param fileName : input File (map.ser)
+  * @return : deserialized map
+  */
+  def readSerializedPolarities(fileName : String) : Map[String, Polarity] = {
+    val ois = new ObjectInputStream(new FileInputStream(fileName)) {
+      override def resolveClass(desc: java.io.ObjectStreamClass): Class[_] = {
+        try { Class.forName(desc.getName, false, getClass.getClassLoader) }
+        catch { case ex: ClassNotFoundException => super.resolveClass(desc) }
+      }
+    }
+    val polarities = ois.readObject() match {
+      case m : Map[String, Polarity] => m
+      case _ => throw new ClassCastException
+    }
+    ois.close();
+    polarities
+  }
 
   def main(args: Array[String]) {
     if(args.length < 4 || args(0).length != 2) {
@@ -145,9 +149,9 @@ object CalculatePolarities extends Base {
  
     if(canary.size > 1) {
       val sample_labels = rows.map(_.drop(1))
-      writeLabeledOutput(args(3), polarity_distributions, sample_labels, labels)
+      cp.writeLabeledOutput(args(3), polarity_distributions, sample_labels, labels)
     } else {
-      writeUnlabeledOutput(args(3), polarity_distributions)
+      cp.writeUnlabeledOutput(args(3), polarity_distributions)
     }
     println("\nThis is what your row looks like : \n" + canary.mkString(sep))
     println("\nThis is what a tweet looks like : \n" + canary.head)
