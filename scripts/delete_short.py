@@ -9,6 +9,6 @@ for line in fd :
   line = line.rstrip("\n").split(" ")
   if(leng < 0) : 
     leng = len(line)
-  if(len(line) > leng) : print "Longer line after line 0 : ", line
+  #if(len(line) > leng) : print "Longer line after line 0 : ", line
   if(len(line) == leng) : print >>of, (" ".join(line))
 
