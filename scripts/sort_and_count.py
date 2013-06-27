@@ -1,7 +1,7 @@
 import sys, glob, re
 
-keywords = for line in open(sys.argv[1]).readLines(): line.split(",")
-times = open(sys.argv[2]).readLines()
+keywords = [line.rstrip('\n').split(",") for line in open(sys.argv[1]).readlines()]
+times = [line.rstrip('\n') for line in open(sys.argv[2]).readlines()]
 tweets = glob.glob(sys.argv[3] + '/part-*')
 
 of = open(sys.argv[4], 'w+')
@@ -17,14 +17,14 @@ def what_time_is_it(t):
 
 for f in tweets :
   fd = open(f)
-  lines = for x in fd.readLines(): x.lower().split(",")
+  lines = [x.rstrip('\n').lower().split(",") for x in fd.readlines()]
   #binary_label,time,tweet
   # def proc
   for line in lines :
     if line[0] == 0: continue
     t = what_time_is_it(line[1])
     if t == -1 : continue
-    words = for w in line.split(" "): re.sub(r'\W+', '', w)
+    words = [re.sub(r'\W+', '', w) for w in line[2].split(" ")]
     for k_list in keywords :
       for k in k_list :
         if k in line :
