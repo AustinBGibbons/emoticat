@@ -1,6 +1,6 @@
 import sys, glob, re
 
-keywords = [line.rstrip('\n').split(",") for line in open(sys.argv[1]).readlines()]
+keywords = [line.rstrip('\n').rstrip(',').split(",") for line in open(sys.argv[1]).readlines()]
 times = [line.rstrip('\n') for line in open(sys.argv[2]).readlines()]
 tweets = glob.glob(sys.argv[3] + '/part-*')
 
@@ -21,16 +21,18 @@ for f in tweets :
   #binary_label,time,tweet
   # def proc
   for line in lines :
-    if line[0] == 0: continue
+    if line[0] == '0': continue
     t = what_time_is_it(line[1])
     if t == -1 : continue
     words = [re.sub(r'\W+', '', w) for w in line[2].split(" ")]
     for k_list in keywords :
       for k in k_list :
-        if k in line :
+        if len(k) < 1: continue
+        if k in words :
           if (k_list[0], t) not in keyword_counts :
             keyword_counts[(k_list[0],t)] = 0
           keyword_counts[(k_list[0],t)]+=1
+          #print t + ' $ ' + k + ' ! ' + ' '.join(line) + " | " + ' '.join(words)
           break # what do you break out of
 
 for k in keyword_counts :

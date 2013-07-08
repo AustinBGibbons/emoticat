@@ -6,15 +6,13 @@ import spark.SparkContext._
 import io.Source
 import java.io._
 
-//import breeze.linalg.Counter
-
 /**
 *   Give natural language text and a mapping from string tokens to floats (polarities)  
 *   Calculate the distribution over the labels
 */
 class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) extends Base {
   def this(sc: SparkContext) = this(sc, CalculatePolarities.readSerializedPolarities(
-    "/afs/cs.stanford.edu/u/gibbons4/emoticat/emoticat/Data/Tweet-New-Data/06-24/Obamney-Polarity.ser"))
+    "/afs/cs.stanford.edu/u/gibbons4/emoticat/emoticat/Data/Tweet-New-Data/07-07/Obamney-Polarity.ser"))
 
   val pd = new PolarityDistribution()
 

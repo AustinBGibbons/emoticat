@@ -13,6 +13,7 @@ case class Polarity(polarity: Map[String, Float], serializationId :Long = 542805
   def get(x: String) : Option[Float] = polarity.get(x)
   def getOrElse(x: String, y: Float) : Float = polarity.getOrElse(x, y)
   def foreach(f: ((String,Float)) => Unit) : Unit = polarity.foreach(f)
+  def toOrderedArray = polarity.toSeq.sortBy(_._1).map(_._2).toArray 
 }
 
 trait Base extends Serializable {

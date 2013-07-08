@@ -7,6 +7,7 @@ import breeze.text.tokenize.PTBTokenizer
 import breeze.text.analyze.PorterStemmer
 import java.util.regex.Pattern
 
+import java.io.FileWriter
 import java.io.FileOutputStream
 import java.io.ObjectOutputStream
 
@@ -119,6 +120,12 @@ class PolarityDistribution extends Base {
 
 object PolarityDistribution extends Base {
   
+  def writeListOutput(fileName: String, polarities: Map[String, Polarity]) {
+    val out = new FileWriter(fileName)
+    polarities foreach {case(w,p) => out.write(w + "," + p.toOrderedArray.mkString(" ") + "\n")}
+    out.close()
+  }
+
   def writeOutput(fileName: String, polarities: Map[String, Polarity]) {
     val fos = new FileOutputStream(fileName)
     val oos = new ObjectOutputStream(fos)
