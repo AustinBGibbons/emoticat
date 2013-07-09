@@ -50,50 +50,6 @@ class CalculatePolarities(sc: SparkContext, polarities: Map[String, Polarity]) e
     else normalize(labelCounts.toSeq.sortBy(_._1).map(_._2).toArray) // TODO : map to specific sized and indexed array
   }
 
-  def getPol(token: String) : Array[Float] = {
-    val whut = polarities.get(token)
-    Array(8)
-  }
-
-  def shortpute(samples: RDD[String]) : RDD[Array[Float]] = {
-    samples map (sample => {
-      shortpute(sample)
-    })
-  }
-
-  def shortpute(sample: String) : Array[Float] = {
-    val labelCounts = Array.fill[Float](8)(0f) //scala.collection.mutable.HashMap[String, Float]()
-   // pd.tokenize(sample) foreach (token => {
-    sample.split(" ") foreach (token => {
- /*     if (polarities.contains(token)) {
-        polarities.get(token).get foreach{case(label, value) =>
-          //println("adding: " + value + " from " + token + " to " + label)
-          labelCounts.put(label, labelCounts.getOrElse(label, 0f)+value)
-        }
-      }
-*/
-      val pol = getPol(token)
-      for(i <- 0 until pol.length) {
-        labelCounts(i) += pol(i)
-      }
-    })
-    labelCounts
-//    if (labelCounts.size == 0) Array()
-//    else normalize(labelCounts.toSeq.sortBy(_._1).map(_._2).toArray) // TODO : map to specific sized and indexed array
-  }
-
-  // create each 1-v-all feature set
-/*
-  def compute(labels: List[String], samples: RDD[Sample]) : RDD[(String, Seq[PolarExample])] = {
-    samples flatMap ( sample => {
-      val featureArray = compute(sample.text)
-      labels map ( label => {
-        (label, (new PolarExample(if(sample.label.contains(label)) 1 else 0, featureArray)))
-      })
-    }) groupByKey()
-  }
-*/
-
   // normalize an array of floats
   def normalize(arr: Array[Float]) : Array[Float] = {
     val sum = arr.reduce(_+_)
