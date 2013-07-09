@@ -1,0 +1,18 @@
+python ascii_to_libsvm.py ../Data/Tweet-New-Data/06-24/Obamney-Labeled-Polarities/hopeful.mat/part-00000 ../Data/Tweet-New-Data/libsvm/Obamney-Labeled-Polarities/hopeful.mat/part-00000
+
+python ascii_to_libsvm.py ../Data/Tweet-New-Data/06-24/Obamney-Labeled-Polarities/happy.mat/part-00000 ../Data/Tweet-New-Data/libsvm/Obamney-Labeled-Polarities/happy.mat/part-00000
+
+python ascii_to_libsvm.py ../Data/Tweet-New-Data/06-24/Obamney-Labeled-Polarities/afraid.mat/part-00000 ../Data/Tweet-New-Data/libsvm/Obamney-Labeled-Polarities/afraid.mat/part-00000
+
+python ascii_to_libsvm.py ../Data/Tweet-New-Data/06-24/Obamney-Labeled-Polarities/angry.mat/part-00000 ../Data/Tweet-New-Data/libsvm/Obamney-Labeled-Polarities/angry.mat/part-00000
+
+python ascii_to_libsvm.py ../Data/Tweet-New-Data/06-24/Obamney-Labeled-Polarities/sad.mat/part-00000 ../Data/Tweet-New-Data/libsvm/Obamney-Labeled-Polarities/sad.mat/part-00000
+
+python ascii_to_libsvm.py ../Data/Tweet-New-Data/06-24/Obamney-Labeled-Polarities/funny.mat/part-00000 ../Data/Tweet-New-Data/libsvm/Obamney-Labeled-Polarities/funny.mat/part-00000
+
+python ascii_to_libsvm.py ../Data/Tweet-New-Data/06-24/Obamney-Labeled-Polarities/none.mat/part-00000 ../Data/Tweet-New-Data/libsvm/Obamney-Labeled-Polarities/none.mat/part-00000
+
+python ascii_to_libsvm.py ../Data/Tweet-New-Data/06-24/Obamney-Labeled-Polarities/mocking.mat/part-00000 ../Data/Tweet-New-Data/libsvm/Obamney-Labeled-Polarities/mocking.mat/part-00000
+
+python ascii_to_libsvm.py ../Data/Tweet-New-Data/06-24/Obamney-Labeled-Polarities/unlabeled.mat/part-00000 ../Data/Tweet-New-Data/libsvm/Obamney-Labeled-Polarities/unlabeled.mat/part-00000
+

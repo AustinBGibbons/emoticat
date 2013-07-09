@@ -1,0 +1,10 @@
+# Uses spark etc.
+sbt-big 'project twitter_cruncher' 'run-main main.scala.SummerCruncher /afs/cs.stanford.edu/u/gibbons4/emoticat/emoticat/Data/Twitter-Super-Bowl/All-Tweets-11-22/ /afs/cs.stanford.edu/u/gibbons4/emoticat/emoticat/Data/Twitter-Super-Bowl/Processed --libsvm'
+
+# well obviously this could be better
+hardcoded_label_runner.sh
+  # calls svm_learn_directory for each label, which in turn calls svm_learn on each file, which in turn uses matlab
+
+# OBVIOUSLY
+swap_all_hardcoded.sh
+  # turns two files : one of form features,time,text and label into label,time,text
