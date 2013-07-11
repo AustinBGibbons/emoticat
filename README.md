@@ -20,6 +20,14 @@ Running :
      > run-main main.scala.PolarityDistribution Tweet-Data/Tiny-Labeled.csv Tweet-Data/Tiny-Polarity.ser
      > run-main main.scala.CalculatePolarities -s Tweet-Data/Tiny-Polarity.ser Tweet-Data/Tiny-Unlabeled.csv Tweet-Data/Tiny-features.txt
 
+If you are running a very large dataset, you should modify your sbt configuration to increase RAM, ie,
+
+```
+#!/bin/sh
+test -f ~/.sbtconfig && . ~/.sbtconfig
+exec java -Xmx400G -Xms20G -XX:MaxPermSize=40G ${SBT_OPTS} -jar ~/bin/sbt-launch.jar "$@"
+```
+
 Todo : describe how to run liblinear / libsvm
 
 Testing :
