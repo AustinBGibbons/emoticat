@@ -20,26 +20,20 @@ Running :
      > run-main main.scala.PolarityDistribution Tweet-Data/Tiny-Labeled.csv Tweet-Data/Tiny-Polarity.ser
      > run-main main.scala.CalculatePolarities -s Tweet-Data/Tiny-Polarity.ser Tweet-Data/Tiny-Unlabeled.csv Tweet-Data/Tiny-features.txt
 
-  The matlab script can be run with :
-
-    > matlab
-    > svm_learn train_set.ascii learn_set.ascii output_labels.txt
+Todo : describe how to run liblinear / libsvm
 
 Testing :
   
   We are using scalatest for testing. From the root directory :
 
      > sbt test
+     
   Should run and compile all test. You can also test within a specific project, 
   or use test-only to call a specific test.
 
 Todo :
 
-  - Training Pipeline
-  - Develop Pipeline
-  - Test Pipeline
-  - Production Pipeline
+  - Unit Tests
   - Streaming Support
-  - Documentation
-  - Test Cases
+  - Documentation Auto-generation
   - Maven for external jar/lib handling
